@@ -10,6 +10,7 @@ import {
   Search,
   Menu,
   X,
+  Wallet,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -53,7 +54,7 @@ export function Sidebar() {
       <Button
         variant="ghost"
         size="icon"
-        className="fixed top-4 left-4 z-50 md:hidden"
+        className="fixed top-4 left-4 z-50 md:hidden bg-white/80 backdrop-blur-sm shadow-sm"
         onClick={() => setMobileOpen(!mobileOpen)}
       >
         {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -62,7 +63,7 @@ export function Sidebar() {
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden"
           onClick={() => setMobileOpen(false)}
         />
       )}
@@ -70,25 +71,31 @@ export function Sidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed left-0 top-0 z-40 h-screen w-64 border-r border-border bg-sidebar transition-transform md:translate-x-0",
+          "fixed left-0 top-0 z-40 h-screen w-72 bg-sidebar border-r border-sidebar-border/50 transition-transform duration-300 ease-out md:translate-x-0",
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
         <div className="flex h-full flex-col">
           {/* Logo */}
-          <div className="flex h-16 items-center border-b border-sidebar-border px-6">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                <TrendingUp className="h-5 w-5 text-primary-foreground" />
+          <div className="flex h-20 items-center px-6">
+            <Link href="/" className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl gradient-primary shadow-lg shadow-primary/25">
+                <Wallet className="h-5 w-5 text-white" />
               </div>
-              <span className="text-lg font-semibold text-sidebar-foreground">
-                ISA Dashboard
-              </span>
+              <div>
+                <span className="text-lg font-bold text-foreground">
+                  ISA Dashboard
+                </span>
+                <p className="text-xs text-muted-foreground">Stocks & Shares</p>
+              </div>
             </Link>
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 space-y-1 p-4">
+          <nav className="flex-1 px-4 py-6 space-y-1.5">
+            <p className="px-3 mb-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              Menu
+            </p>
             {navItems.map((item) => {
               const isActive = pathname === item.href;
               return (
@@ -97,13 +104,13 @@ export function Sidebar() {
                   href={item.href}
                   onClick={() => setMobileOpen(false)}
                   className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                    "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200",
                     isActive
-                      ? "bg-sidebar-accent text-sidebar-primary"
-                      : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                      ? "bg-primary text-primary-foreground shadow-md shadow-primary/25"
+                      : "text-muted-foreground hover:bg-accent hover:text-foreground"
                   )}
                 >
-                  <item.icon className="h-5 w-5" />
+                  <item.icon className={cn("h-5 w-5", isActive && "text-primary-foreground")} />
                   {item.title}
                 </Link>
               );
@@ -111,9 +118,10 @@ export function Sidebar() {
           </nav>
 
           {/* Footer */}
-          <div className="border-t border-sidebar-border p-4">
-            <p className="text-xs text-muted-foreground">
-              Tax year 2024/25
+          <div className="p-4 mx-4 mb-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/10">
+            <p className="text-sm font-medium text-foreground">Tax Year 2024/25</p>
+            <p className="text-xs text-muted-foreground mt-1">
+              Allowance: £20,000
             </p>
           </div>
         </div>
