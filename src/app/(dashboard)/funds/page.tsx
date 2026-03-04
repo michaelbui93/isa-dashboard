@@ -1,0 +1,55 @@
+"use client";
+
+import { useState, useMemo } from "react";
+import { Header } from "@/components/layout/header";
+import { FundCard } from "@/components/funds/fund-card";
+import { FundSearch } from "@/components/funds/fund-search";
+import { FUNDS } from "@/data/funds";
+
+export default function FundsPage() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const filteredFunds = useMemo(() => {
+    return FUNDS.filter((fund) => {
+      const matchesSearch =
+        searchQuery === "" ||
+        fund.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        fund.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        fund.provider.toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesCategory =
+        selectedCategory === "All" || fund.category === selectedCategory;
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [searchQuery, selectedCategory]);
+
+  return (
+    <>
+      <Header title="Fund Universe" />
+      <div className="p-6 space-y-6">
+        <FundSearch
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+        />
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredFunds.map((fund) => (
+            <FundCard key={fund.symbol} fund={fund} />
+          ))}
+        </div>
+
+        {filteredFunds.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground">
+              No funds match your search criteria.
+            </p>
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
