@@ -14,15 +14,15 @@ export function PortfolioSummary({ summary }: PortfolioSummaryProps) {
   const isPositiveTotal = summary.totalGainLoss >= 0;
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-3 md:gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
       {/* Total Value - Featured Card */}
-      <div className="md:col-span-2 rounded-2xl gradient-primary p-6 text-white shadow-lg shadow-primary/25">
+      <div className="md:col-span-2 rounded-2xl gradient-primary p-5 md:p-6 text-white shadow-lg shadow-primary/25 animate-fade-in-up stagger-1">
         <div className="flex items-start justify-between">
           <div>
             <p className="text-white/70 text-sm font-medium">Total Portfolio Value</p>
             <CurrencyDisplay
               amount={summary.totalValue}
-              className="text-4xl font-bold mt-2 text-white"
+              className="text-3xl md:text-4xl font-bold mt-2 text-white font-financial"
             />
             <div className="flex items-center gap-3 mt-3">
               <div className="flex items-center gap-1.5 bg-white/20 rounded-full px-3 py-1">
@@ -31,7 +31,7 @@ export function PortfolioSummary({ summary }: PortfolioSummaryProps) {
                 ) : (
                   <ArrowDownRight className="h-4 w-4" />
                 )}
-                <span className="text-sm font-medium">
+                <span className="text-sm font-medium font-financial">
                   {summary.dayChangePercent >= 0 ? "+" : ""}
                   {summary.dayChangePercent.toFixed(2)}% today
                 </span>
@@ -45,7 +45,7 @@ export function PortfolioSummary({ summary }: PortfolioSummaryProps) {
       </div>
 
       {/* Today's Change */}
-      <div className="rounded-2xl border border-border/50 bg-card p-6 shadow-sm hover:shadow-md transition-shadow">
+      <div className="rounded-2xl border border-border/50 bg-card p-5 md:p-6 shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in-up stagger-2">
         <div className="flex items-start justify-between">
           <div>
             <p className="text-muted-foreground text-sm font-medium">Today&apos;s Change</p>
@@ -53,7 +53,7 @@ export function PortfolioSummary({ summary }: PortfolioSummaryProps) {
               amount={summary.dayChange}
               showSign
               colorCode
-              className="text-2xl font-bold mt-2"
+              className="text-xl md:text-2xl font-bold mt-2 font-financial"
             />
             <PercentageChange value={summary.dayChangePercent} size="sm" className="mt-1" />
           </div>
@@ -68,7 +68,7 @@ export function PortfolioSummary({ summary }: PortfolioSummaryProps) {
       </div>
 
       {/* Total Gain/Loss */}
-      <div className="rounded-2xl border border-border/50 bg-card p-6 shadow-sm hover:shadow-md transition-shadow">
+      <div className="rounded-2xl border border-border/50 bg-card p-5 md:p-6 shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in-up stagger-3">
         <div className="flex items-start justify-between">
           <div>
             <p className="text-muted-foreground text-sm font-medium">Total Gain/Loss</p>
@@ -76,7 +76,7 @@ export function PortfolioSummary({ summary }: PortfolioSummaryProps) {
               amount={summary.totalGainLoss}
               showSign
               colorCode
-              className="text-2xl font-bold mt-2"
+              className="text-xl md:text-2xl font-bold mt-2 font-financial"
             />
             <PercentageChange value={summary.totalGainLossPercent} size="sm" className="mt-1" />
           </div>
@@ -87,22 +87,22 @@ export function PortfolioSummary({ summary }: PortfolioSummaryProps) {
       </div>
 
       {/* Quick Stats Row */}
-      <div className="md:col-span-2 lg:col-span-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="rounded-xl bg-card border border-border/50 p-4">
+      <div className="md:col-span-2 lg:col-span-4 grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+        <div className="rounded-xl bg-card border border-border/50 p-4 animate-fade-in-up stagger-4">
           <p className="text-xs text-muted-foreground font-medium">Invested</p>
-          <CurrencyDisplay amount={summary.totalInvested} className="text-lg font-semibold mt-1" />
+          <CurrencyDisplay amount={summary.totalInvested} className="text-base md:text-lg font-semibold mt-1 font-financial" />
         </div>
-        <div className="rounded-xl bg-card border border-border/50 p-4">
+        <div className="rounded-xl bg-card border border-border/50 p-4 animate-fade-in-up stagger-5">
           <p className="text-xs text-muted-foreground font-medium">Cash Balance</p>
-          <CurrencyDisplay amount={summary.cashBalance} className="text-lg font-semibold mt-1" />
+          <CurrencyDisplay amount={summary.cashBalance} className="text-base md:text-lg font-semibold mt-1 font-financial" />
         </div>
-        <div className="rounded-xl bg-card border border-border/50 p-4">
+        <div className="rounded-xl bg-card border border-border/50 p-4 animate-fade-in-up stagger-6">
           <p className="text-xs text-muted-foreground font-medium">Return</p>
           <PercentageChange value={summary.totalGainLossPercent} showIcon={false} size="lg" className="mt-1" />
         </div>
-        <div className="rounded-xl bg-card border border-border/50 p-4">
+        <div className="rounded-xl bg-card border border-border/50 p-4 animate-fade-in-up stagger-7">
           <p className="text-xs text-muted-foreground font-medium">Day Change</p>
-          <CurrencyDisplay amount={summary.dayChange} showSign colorCode className="text-lg font-semibold mt-1" />
+          <CurrencyDisplay amount={summary.dayChange} showSign colorCode className="text-base md:text-lg font-semibold mt-1 font-financial" />
         </div>
       </div>
     </div>

@@ -43,12 +43,13 @@ export default function FundsPage() {
           onCategoryChange={setSelectedCategory}
         />
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filteredFunds.map((fund) => (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredFunds.map((fund, index) => (
             <FundCard
               key={fund.symbol}
               fund={fund}
               isInPortfolio={portfolioSymbols.has(fund.symbol)}
+              index={index}
             />
           ))}
         </div>

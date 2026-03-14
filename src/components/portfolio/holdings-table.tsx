@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
@@ -21,27 +22,27 @@ interface HoldingsTableProps {
 export function HoldingsTable({ holdings }: HoldingsTableProps) {
   if (holdings.length === 0) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Holdings</CardTitle>
+      <Card className="animate-fade-in-up stagger-2">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg">Holdings</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">
+          <div className="flex items-center justify-center h-[100px] text-muted-foreground text-sm">
             No holdings yet. Browse funds to start investing.
-          </p>
+          </div>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Holdings</CardTitle>
+    <Card className="animate-fade-in-up stagger-2">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-lg">Holdings</CardTitle>
       </CardHeader>
       <CardContent>
         {/* Desktop table */}
-        <div className="hidden md:block">
+        <div className="hidden md:block overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -54,22 +55,26 @@ export function HoldingsTable({ holdings }: HoldingsTableProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {holdings.map((holding) => (
-                <TableRow key={holding.id}>
+              {holdings.map((holding, index) => (
+                <TableRow
+                  key={holding.id}
+                  className="animate-fade-in-up cursor-pointer hover:bg-muted/50 transition-colors"
+                  style={{ animationDelay: `${(index + 4) * 50}ms` }}
+                >
                   <TableCell>
-                    <div>
+                    <Link href={`/funds/${holding.fundSymbol}`} className="block">
                       <p className="font-medium">{holding.fundSymbol}</p>
                       <p className="text-xs text-muted-foreground truncate max-w-[200px]">
                         {holding.fund.name}
                       </p>
-                    </div>
+                    </Link>
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right font-financial">
                     {formatShares(holding.shares)}
                   </TableCell>
                   <TableCell className="text-right">
                     <div>
-                      <CurrencyDisplay amount={holding.fund.currentPrice} size="sm" />
+                      <CurrencyDisplay amount={holding.fund.currentPrice} size="sm" className="font-financial" />
                       <PercentageChange
                         value={holding.fund.dayChange}
                         size="sm"
@@ -79,7 +84,7 @@ export function HoldingsTable({ holdings }: HoldingsTableProps) {
                     </div>
                   </TableCell>
                   <TableCell className="text-right font-medium">
-                    <CurrencyDisplay amount={holding.currentValue} />
+                    <CurrencyDisplay amount={holding.currentValue} className="font-financial" />
                   </TableCell>
                   <TableCell className="text-right">
                     <div>
@@ -88,6 +93,7 @@ export function HoldingsTable({ holdings }: HoldingsTableProps) {
                         showSign
                         colorCode
                         size="sm"
+                        className="font-financial"
                       />
                       <PercentageChange
                         value={holding.gainLossPercent}
@@ -97,7 +103,7 @@ export function HoldingsTable({ holdings }: HoldingsTableProps) {
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right font-financial">
                     {holding.allocation.toFixed(1)}%
                   </TableCell>
                 </TableRow>
@@ -107,11 +113,13 @@ export function HoldingsTable({ holdings }: HoldingsTableProps) {
         </div>
 
         {/* Mobile cards */}
-        <div className="md:hidden space-y-3">
-          {holdings.map((holding) => (
-            <div
+        <div className="md:hidden space-y-2">
+          {holdings.map((holding, index) => (
+            <Link
+              href={`/funds/${holding.fundSymbol}`}
               key={holding.id}
-              className="flex items-center justify-between p-3 rounded-lg bg-muted/50"
+              className="flex items-center justify-between p-3 rounded-xl bg-muted/50 hover:bg-muted transition-colors btn-press touch-target animate-fade-in-up"
+              style={{ animationDelay: `${(index + 4) * 50}ms` }}
             >
               <div className="min-w-0 flex-1">
                 <p className="font-medium">{holding.fundSymbol}</p>
@@ -120,14 +128,14 @@ export function HoldingsTable({ holdings }: HoldingsTableProps) {
                 </p>
               </div>
               <div className="text-right">
-                <CurrencyDisplay amount={holding.currentValue} className="font-medium" />
+                <CurrencyDisplay amount={holding.currentValue} className="font-medium font-financial" />
                 <PercentageChange
                   value={holding.gainLossPercent}
                   size="sm"
                   className="block"
                 />
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </CardContent>

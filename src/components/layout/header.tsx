@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ThemeToggle } from "./theme-toggle";
 
 interface HeaderProps {
   title: string;
@@ -18,16 +19,18 @@ interface HeaderProps {
 
 export function Header({ title }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-30 flex h-20 items-center justify-between border-b border-border/50 bg-background/80 backdrop-blur-xl px-6">
-      <div className="flex items-center gap-4 md:ml-0 ml-14">
-        <h1 className="text-2xl font-bold text-foreground">{title}</h1>
+    <header className="sticky top-0 z-30 flex h-16 md:h-20 items-center justify-between border-b border-border/50 bg-background/80 backdrop-blur-xl px-4 md:px-6 animate-fade-in">
+      <div className="flex items-center gap-4 md:ml-0 ml-12">
+        <h1 className="text-xl md:text-2xl font-bold text-foreground">{title}</h1>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 md:gap-3">
+        <ThemeToggle />
+
         <Button
           variant="ghost"
           size="icon"
-          className="relative h-10 w-10 rounded-xl hover:bg-accent"
+          className="relative h-10 w-10 rounded-xl hover:bg-accent btn-press touch-target"
         >
           <Bell className="h-5 w-5 text-muted-foreground" />
           <span className="absolute -top-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground shadow-sm">
@@ -39,7 +42,7 @@ export function Header({ title }: HeaderProps) {
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
-              className="relative h-10 w-10 rounded-xl p-0 hover:bg-accent"
+              className="relative h-10 w-10 rounded-xl p-0 hover:bg-accent btn-press touch-target"
             >
               <Avatar className="h-10 w-10 rounded-xl">
                 <AvatarFallback className="rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 text-primary font-medium">
@@ -58,10 +61,10 @@ export function Header({ title }: HeaderProps) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="rounded-lg">Settings</DropdownMenuItem>
-            <DropdownMenuItem className="rounded-lg">Help</DropdownMenuItem>
+            <DropdownMenuItem className="rounded-lg touch-target">Settings</DropdownMenuItem>
+            <DropdownMenuItem className="rounded-lg touch-target">Help</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="rounded-lg">Log out</DropdownMenuItem>
+            <DropdownMenuItem className="rounded-lg touch-target">Log out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

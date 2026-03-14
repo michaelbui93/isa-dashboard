@@ -11,15 +11,19 @@ import type { Fund } from "@/types";
 interface FundCardProps {
   fund: Fund;
   isInPortfolio?: boolean;
+  index?: number;
 }
 
-export function FundCard({ fund, isInPortfolio = false }: FundCardProps) {
+export function FundCard({ fund, isInPortfolio = false, index = 0 }: FundCardProps) {
   const sparklineData = fund.priceHistory.slice(-30);
   const isPositive = fund.dayChange >= 0;
 
   return (
     <Link href={`/funds/${fund.symbol}`}>
-      <div className="group relative rounded-2xl border border-border/50 bg-card p-5 shadow-sm hover:shadow-lg hover:border-primary/30 transition-all duration-300 cursor-pointer">
+      <div
+        className="group relative rounded-2xl border border-border/50 bg-card p-4 md:p-5 shadow-sm hover:shadow-lg hover:border-primary/30 transition-all duration-300 cursor-pointer btn-press touch-target animate-fade-in-up"
+        style={{ animationDelay: `${index * 50}ms` }}
+      >
         {/* Portfolio Indicator */}
         {isInPortfolio && (
           <div className="absolute top-3 right-3">
@@ -31,18 +35,18 @@ export function FundCard({ fund, isInPortfolio = false }: FundCardProps) {
         )}
 
         {/* Header */}
-        <div className="flex items-start justify-between mb-4">
+        <div className="flex items-start justify-between mb-3 md:mb-4">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shrink-0">
               <span className="text-sm font-bold text-primary">
                 {fund.symbol.slice(0, 2)}
               </span>
             </div>
-            <div>
-              <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+            <div className="min-w-0">
+              <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors truncate">
                 {fund.symbol}
               </h3>
-              <p className="text-xs text-muted-foreground line-clamp-1 max-w-[140px]">
+              <p className="text-xs text-muted-foreground line-clamp-1">
                 {fund.provider}
               </p>
             </div>
@@ -50,7 +54,7 @@ export function FundCard({ fund, isInPortfolio = false }: FundCardProps) {
         </div>
 
         {/* Sparkline Chart */}
-        <div className="h-16 mb-4 -mx-1">
+        <div className="h-14 md:h-16 mb-3 md:mb-4 -mx-1">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={sparklineData}>
               <defs>
@@ -84,7 +88,7 @@ export function FundCard({ fund, isInPortfolio = false }: FundCardProps) {
           <div>
             <CurrencyDisplay
               amount={fund.currentPrice}
-              className="text-xl font-bold text-foreground"
+              className="text-lg md:text-xl font-bold text-foreground font-financial"
             />
             <PercentageChange value={fund.dayChange} size="sm" className="mt-0.5" />
           </div>
@@ -96,16 +100,16 @@ export function FundCard({ fund, isInPortfolio = false }: FundCardProps) {
         </div>
 
         {/* Footer Stats */}
-        <div className="flex items-center justify-between mt-4 pt-4 border-t border-border/50">
-          <div className="text-xs text-muted-foreground">
+        <div className="flex items-center justify-between mt-3 md:mt-4 pt-3 md:pt-4 border-t border-border/50 text-xs text-muted-foreground">
+          <div>
             <span className="font-medium text-foreground">TER:</span> {fund.ter}%
           </div>
           {fund.dividendYield && (
-            <div className="text-xs text-muted-foreground">
+            <div className="hidden sm:block">
               <span className="font-medium text-foreground">Yield:</span> {fund.dividendYield}%
             </div>
           )}
-          <div className="text-xs text-muted-foreground">
+          <div>
             <span className="font-medium text-foreground">1Y:</span>{" "}
             <span className={fund.yearChange >= 0 ? "text-gain" : "text-loss"}>
               {fund.yearChange >= 0 ? "+" : ""}{fund.yearChange}%
