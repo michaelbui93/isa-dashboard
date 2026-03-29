@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { ChevronUp, ChevronDown, ChevronsUpDown, ChevronRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -76,42 +77,44 @@ function ExpandedDetail({ holding }: { holding: HoldingWithDetails }) {
 
 // ─── Mobile holding card ──────────────────────────────────────────────────────
 function HoldingCard({ holding }: { holding: HoldingWithDetails }) {
-  const [expanded, setExpanded] = useState(false);
+  const [sheetOpen, setSheetOpen] = useState(false);
   const hasDrawdown = Math.abs(holding.drawdownPercent) > 20;
 
   return (
-    <div
-      className={[
-        "rounded-xl border bg-card transition-shadow",
-        hasDrawdown ? "shadow-[0_0_0_1px_hsl(var(--loss)/0.3),0_0_12px_hsl(var(--loss)/0.08)]" : "border-border/50",
-      ].join(" ")}
-    >
-      <motion.button
-        whileTap={{ scale: 0.98 }}
-        onClick={() => setExpanded((e) => !e)}
-        className="w-full flex items-center justify-between p-4 text-left"
+    <>
+      <div
+        className={[
+          "rounded-xl border bg-card transition-shadow",
+          hasDrawdown ? "shadow-[0_0_0_1px_hsl(var(--loss)/0.3),0_0_12px_hsl(var(--loss)/0.08)]" : "border-border/50",
+        ].join(" ")}
       >
-        <div className="min-w-0 flex-1">
-          <p className="font-medium text-sm">{holding.fund.name.split(" ").slice(0, 3).join(" ")}</p>
-          <p className="text-xs text-muted-foreground mt-0.5">{holding.fundSymbol} · {formatShares(holding.shares)} shares</p>
-        </div>
-        <div className="text-right ml-3 shrink-0">
-          <CurrencyDisplay amount={holding.currentValue} className="font-semibold font-financial" />
-          <div className="flex items-center justify-end gap-1.5 mt-0.5">
-            <PercentageChange value={holding.gainLossPercent} size="sm" showIcon={false} />
-            <DrawdownBadge value={holding.drawdownPercent} />
+        <motion.button
+          whileTap={{ scale: 0.98 }}
+          onClick={() => setSheetOpen(true)}
+          className="w-full flex items-center justify-between p-4 text-left"
+        >
+          <div className="min-w-0 flex-1">
+            <p className="font-medium text-sm">{holding.fund.name.split(" ").slice(0, 3).join(" ")}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">{holding.fundSymbol} · {formatShares(holding.shares)} shares</p>
           </div>
-        </div>
-      </motion.button>
+          <div className="text-right ml-3 shrink-0">
+            <CurrencyDisplay amount={holding.currentValue} className="font-semibold font-financial" />
+            <div className="flex items-center justify-end gap-1.5 mt-0.5">
+              <PercentageChange value={holding.gainLossPercent} size="sm" showIcon={false} />
+              <DrawdownBadge value={holding.drawdownPercent} />
+            </div>
+          </div>
+        </motion.button>
+      </div>
 
-      <AnimatePresence>
-        {expanded && (
-          <div className="px-4 pb-4">
-            <ExpandedDetail holding={holding} />
-          </div>
-        )}
-      </AnimatePresence>
-    </div>
+      <BottomSheet
+        open={sheetOpen}
+        onClose={() => setSheetOpen(false)}
+        title={`${holding.fundSymbol} — Detail`}
+      >
+        <ExpandedDetail holding={holding} />
+      </BottomSheet>
+    </>
   );
 }
 
