@@ -4,6 +4,7 @@ import { Header } from "@/components/layout/header";
 import { AllowanceGauge } from "@/components/allowance/allowance-gauge";
 import { AllowanceSummary } from "@/components/allowance/allowance-summary";
 import { ContributionHistory } from "@/components/allowance/contribution-history";
+import { PacingSignal } from "@/components/allowance/pacing-signal";
 import { useAllowance } from "@/hooks/use-allowance";
 
 export default function AllowancePage() {
@@ -27,6 +28,8 @@ export default function AllowancePage() {
             percentUsed={percentUsed}
           />
         </div>
+
+        <PacingSignal taxYear={taxYear} totalDeposited={totalDeposited} />
 
         <ContributionHistory contributions={contributions} />
       </div>
