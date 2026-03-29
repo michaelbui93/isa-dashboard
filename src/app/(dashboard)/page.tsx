@@ -1,6 +1,7 @@
 "use client";
 
 import { Header } from "@/components/layout/header";
+import { PortfolioHero } from "@/components/portfolio/portfolio-hero";
 import { PortfolioSummary } from "@/components/portfolio/portfolio-summary";
 import { HoldingsTable } from "@/components/portfolio/holdings-table";
 import { AssetHeatmap } from "@/components/portfolio/asset-heatmap";
@@ -14,6 +15,7 @@ export default function PortfolioPage() {
     <>
       <Header title="Portfolio" />
       <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+        <PortfolioHero summary={summary} />
         <PortfolioSummary summary={summary} />
 
         <CashDragMonitor summary={summary} />
