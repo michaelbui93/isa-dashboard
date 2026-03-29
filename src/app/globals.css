@@ -365,6 +365,11 @@
   transform: scale(0.97);
 }
 
+/* ─── Shimmer skeleton animation ────────────────────────────── */
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
 /* ─── Pacing signal amber pulse (when significantly behind target) ─ */
 @keyframes pacing-pulse {
   0%, 100% { box-shadow: 0 0 0 0 oklch(0.75 0.15 85 / 0); }
