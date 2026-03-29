@@ -362,7 +362,21 @@
 
 /* Button press effect */
 .btn-press:active {
-  transform: scale(0.98);
+  transform: scale(0.97);
+}
+
+/* ─── Pacing signal amber pulse (when significantly behind target) ─ */
+@keyframes pacing-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 oklch(0.75 0.15 85 / 0); }
+  50% { box-shadow: 0 0 0 6px oklch(0.75 0.15 85 / 0.18); }
+}
+.pacing-behind {
+  animation: pacing-pulse 3s ease-in-out infinite;
+}
+
+/* ─── Drawdown red glow (>20% from peak) ─────────────────────── */
+.drawdown-glow {
+  box-shadow: 0 0 0 1px hsl(var(--loss) / 0.25), 0 0 14px hsl(var(--loss) / 0.1);
 }
 
 /* Theme toggle animation */

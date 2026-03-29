@@ -1,5 +1,7 @@
 "use client";
 
+import { PageTransition } from "@/components/layout/page-transition";
+
 import { Header } from "@/components/layout/header";
 import { PortfolioHero } from "@/components/portfolio/portfolio-hero";
 import { PortfolioSummary } from "@/components/portfolio/portfolio-summary";
@@ -12,7 +14,8 @@ export default function PortfolioPage() {
   const { holdings, summary } = usePortfolio();
 
   return (
-    <>
+    <PageTransition>
+      <>
       <Header title="Portfolio" />
       <div className="p-4 md:p-6 space-y-4 md:space-y-6">
         <PortfolioHero summary={summary} />
@@ -26,5 +29,6 @@ export default function PortfolioPage() {
         </div>
       </div>
     </>
+    </PageTransition>
   );
 }

@@ -37,6 +37,7 @@ export function PacingSignal({ taxYear, totalDeposited }: PacingSignalProps) {
   if (totalDeposited === 0) return null;
 
   const { daysRemaining, projectedCapped, shortfall, onTrack } = pacing;
+  const significantlyBehind = !onTrack && projectedCapped / taxYear.allowance < 0.8;
 
   return (
     <div
@@ -47,6 +48,7 @@ export function PacingSignal({ taxYear, totalDeposited }: PacingSignalProps) {
           : shortfall > 500000
           ? "bg-loss/10 border-loss/30 text-loss"
           : "bg-amber-500/10 border-amber-500/30 text-amber-500",
+        significantlyBehind ? "pacing-behind" : "",
       ].join(" ")}
     >
       <div className="mt-0.5 shrink-0">

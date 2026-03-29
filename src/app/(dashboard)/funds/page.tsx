@@ -1,5 +1,7 @@
 "use client";
 
+import { PageTransition } from "@/components/layout/page-transition";
+
 import { useState, useMemo } from "react";
 import { Header } from "@/components/layout/header";
 import { FundCard } from "@/components/funds/fund-card";
@@ -33,7 +35,8 @@ export default function FundsPage() {
   }, [searchQuery, selectedCategory]);
 
   return (
-    <>
+    <PageTransition>
+      <>
       <Header title="Fund Universe" />
       <div className="p-6 space-y-6">
         <FundSearch
@@ -63,5 +66,6 @@ export default function FundsPage() {
         )}
       </div>
     </>
+    </PageTransition>
   );
 }

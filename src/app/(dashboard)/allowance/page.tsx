@@ -1,5 +1,7 @@
 "use client";
 
+import { PageTransition } from "@/components/layout/page-transition";
+
 import { Header } from "@/components/layout/header";
 import { AllowanceGauge } from "@/components/allowance/allowance-gauge";
 import { AllowanceSummary } from "@/components/allowance/allowance-summary";
@@ -12,7 +14,8 @@ export default function AllowancePage() {
     useAllowance();
 
   return (
-    <>
+    <PageTransition>
+      <>
       <Header title="ISA Allowance" />
       <div className="p-4 md:p-6 space-y-4 md:space-y-6">
         <div className="grid gap-4 md:gap-6 md:grid-cols-2">
@@ -34,5 +37,6 @@ export default function AllowancePage() {
         <ContributionHistory contributions={contributions} />
       </div>
     </>
+    </PageTransition>
   );
 }

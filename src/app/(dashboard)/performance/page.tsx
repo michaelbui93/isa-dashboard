@@ -1,5 +1,7 @@
 "use client";
 
+import { PageTransition } from "@/components/layout/page-transition";
+
 import { useState } from "react";
 import { Header } from "@/components/layout/header";
 import { PerformanceChart } from "@/components/performance/performance-chart";
@@ -13,7 +15,8 @@ export default function PerformancePage() {
   const [period, setPeriod] = useState("1M");
 
   return (
-    <>
+    <PageTransition>
+      <>
       <Header title="Performance" />
       <div className="p-4 md:p-6 space-y-4 md:space-y-6">
         <div className="flex justify-end">
@@ -28,5 +31,6 @@ export default function PerformancePage() {
         </div>
       </div>
     </>
+    </PageTransition>
   );
 }
