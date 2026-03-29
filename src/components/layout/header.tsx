@@ -20,7 +20,7 @@ interface HeaderProps {
 export function Header({ title }: HeaderProps) {
   return (
     <header className="sticky top-0 z-30 flex h-16 md:h-20 items-center justify-between border-b border-border/50 bg-background/80 backdrop-blur-xl px-4 md:px-6 animate-fade-in">
-      <div className="flex items-center gap-4 md:ml-0 ml-12">
+      <div className="flex items-center gap-4">
         <h1 className="text-xl md:text-2xl font-bold text-foreground">{title}</h1>
       </div>
 
