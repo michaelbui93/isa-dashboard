@@ -50,6 +50,16 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
+/* ─── 8px Base Grid Spacing ─────────────────────────────────── */
+:root {
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 40px;
+  --space-6: 48px;
+}
+
 /* Light Theme - Refined Luxury */
 :root {
   --radius: 1rem;
@@ -103,6 +113,16 @@
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.06), 0 8px 10px -6px rgb(0 0 0 / 0.05);
   /* Gold accent for luxury feel */
   --gold: oklch(0.75 0.12 85);
+
+  /* ─── Text Emphasis Levels ──────────────────────────────────── */
+  --text-primary: oklch(0.15 0.02 260);
+  --text-secondary: oklch(0.35 0.02 260);
+  --text-tertiary: oklch(0.55 0.015 260);
+
+  /* ─── Surface Levels ─────────────────────────────────────────── */
+  --surface-base: oklch(0.98 0.003 260);
+  --surface-card: oklch(1 0 0);
+  --surface-elevated: oklch(0.99 0.002 260);
 }
 
 /* Dark Theme - Rich Navy Luxury */
@@ -151,6 +171,16 @@
   --loss: oklch(0.65 0.22 25);
   /* Gold accent */
   --gold: oklch(0.8 0.14 85);
+
+  /* ─── Text Emphasis Levels (dark) ───────────────────────────── */
+  --text-primary: oklch(0.96 0.005 260);
+  --text-secondary: oklch(0.72 0.01 260);
+  --text-tertiary: oklch(0.5 0.01 260);
+
+  /* ─── Surface Levels (dark) ──────────────────────────────────── */
+  --surface-base: oklch(0.14 0.025 260);
+  --surface-card: oklch(0.18 0.025 260);
+  --surface-elevated: oklch(0.22 0.025 260);
 }
 
 @layer base {

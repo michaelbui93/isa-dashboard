@@ -14,8 +14,8 @@ export default function AllowancePage() {
   return (
     <>
       <Header title="ISA Allowance" />
-      <div className="p-6 space-y-6">
-        <div className="grid gap-6 lg:grid-cols-2">
+      <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+        <div className="grid gap-4 md:gap-6 md:grid-cols-2">
           <AllowanceGauge
             used={totalDeposited}
             total={taxYear.allowance}

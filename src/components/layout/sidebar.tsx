@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { getCurrentTaxYear } from "@/lib/constants";
+import { formatCurrency } from "@/lib/formatters";
 import { useState, useEffect } from "react";
 
 const navItems = [
@@ -145,10 +147,17 @@ export function Sidebar() {
         {/* Footer */}
         <div className="p-4 shrink-0">
           <div className="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/10">
-            <p className="text-sm font-medium text-foreground">Tax Year 2024/25</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Allowance: £20,000
-            </p>
+            {(() => {
+              const ty = getCurrentTaxYear();
+              return (
+                <>
+                  <p className="text-sm font-medium text-foreground">Tax Year {ty.id}</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Allowance: {formatCurrency(ty.allowance)}
+                  </p>
+                </>
+              );
+            })()}
           </div>
         </div>
       </aside>
