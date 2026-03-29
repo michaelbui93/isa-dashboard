@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/header";
 import { PerformanceChart } from "@/components/performance/performance-chart";
 import { PeriodSelector } from "@/components/performance/period-selector";
 import { GainsSummary } from "@/components/performance/gains-summary";
+import { BenchmarkDelta } from "@/components/performance/benchmark-delta";
 import { usePortfolio } from "@/hooks/use-portfolio";
 
 export default function PerformancePage() {
@@ -23,6 +24,7 @@ export default function PerformancePage() {
 
         <div className="grid gap-6 lg:grid-cols-2">
           <GainsSummary summary={summary} />
+          <BenchmarkDelta holdings={holdings} period={period} />
         </div>
       </div>
     </>
