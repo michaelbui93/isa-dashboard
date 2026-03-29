@@ -1,4 +1,5 @@
-import { Sidebar } from "@/components/layout/sidebar";
+import { SidebarShell } from "@/components/layout/sidebar-shell";
+import { BottomNav } from "@/components/layout/bottom-nav";
 
 export default function DashboardLayout({
   children,
@@ -7,10 +8,8 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="min-h-screen bg-background">
-      <Sidebar />
-      <main className="md:ml-72 min-h-screen">
-        {children}
-      </main>
+      <SidebarShell>{children}</SidebarShell>
+      <BottomNav />
     </div>
   );
 }

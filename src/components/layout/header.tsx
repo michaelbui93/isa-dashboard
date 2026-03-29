@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, User } from "lucide-react";
+import { Bell, User, Command } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ThemeToggle } from "./theme-toggle";
+import { CommandPalette } from "./command-palette";
 
 interface HeaderProps {
   title: string;
@@ -20,11 +21,23 @@ interface HeaderProps {
 export function Header({ title }: HeaderProps) {
   return (
     <header className="sticky top-0 z-30 flex h-16 md:h-20 items-center justify-between border-b border-border/50 bg-background/80 backdrop-blur-xl px-4 md:px-6 animate-fade-in">
-      <div className="flex items-center gap-4 md:ml-0 ml-12">
+      <div className="flex items-center gap-4">
         <h1 className="text-xl md:text-2xl font-bold text-foreground">{title}</h1>
       </div>
 
       <div className="flex items-center gap-2 md:gap-3">
+        <CommandPalette />
+        <Button
+          variant="ghost"
+          className="hidden md:flex items-center gap-1.5 h-8 px-2.5 rounded-lg text-xs text-muted-foreground hover:text-foreground hover:bg-accent btn-press border border-border/50"
+          onClick={() => {
+            const event = new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true });
+            window.dispatchEvent(event);
+          }}
+        >
+          <Command className="h-3 w-3" />
+          <span className="font-mono">K</span>
+        </Button>
         <ThemeToggle />
 
         <Button

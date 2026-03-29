@@ -8,150 +8,172 @@ import {
   PiggyBank,
   Receipt,
   Search,
-  Menu,
-  X,
   Wallet,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { getCurrentTaxYear } from "@/lib/constants";
+import { formatCurrency } from "@/lib/formatters";
 import { useState, useEffect } from "react";
 
+const STORAGE_KEY = "isa-sidebar-collapsed";
+
 const navItems = [
-  {
-    title: "Portfolio",
-    href: "/",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Performance",
-    href: "/performance",
-    icon: TrendingUp,
-  },
-  {
-    title: "ISA Allowance",
-    href: "/allowance",
-    icon: PiggyBank,
-  },
-  {
-    title: "Transactions",
-    href: "/transactions",
-    icon: Receipt,
-  },
-  {
-    title: "Funds",
-    href: "/funds",
-    icon: Search,
-  },
+  { title: "Portfolio", href: "/", icon: LayoutDashboard },
+  { title: "Performance", href: "/performance", icon: TrendingUp },
+  { title: "ISA Allowance", href: "/allowance", icon: PiggyBank },
+  { title: "Transactions", href: "/transactions", icon: Receipt },
+  { title: "Funds", href: "/funds", icon: Search },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  onCollapsedChange?: (collapsed: boolean) => void;
+}
+
+export function Sidebar({ onCollapsedChange }: SidebarProps) {
   const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const taxYear = getCurrentTaxYear();
+  const [collapsed, setCollapsed] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  // Close sidebar on route change
   useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored !== null) setCollapsed(stored === "true");
+    setMounted(true);
+  }, []);
 
-  // Prevent body scroll when mobile menu is open
-  useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [mobileOpen]);
+  const toggle = () => {
+    const next = !collapsed;
+    setCollapsed(next);
+    localStorage.setItem(STORAGE_KEY, String(next));
+    onCollapsedChange?.(next);
+  };
+
+  if (!mounted) return null;
+
+  const sidebarWidth = collapsed ? 64 : 288;
 
   return (
-    <>
-      {/* Mobile menu button */}
-      <Button
-        variant="ghost"
-        size="icon"
-        className="fixed top-3 left-3 z-50 md:hidden h-10 w-10 bg-background/80 backdrop-blur-sm shadow-sm rounded-xl border border-border/50 btn-press touch-target"
-        onClick={() => setMobileOpen(!mobileOpen)}
-        aria-label={mobileOpen ? "Close menu" : "Open menu"}
-      >
-        {mobileOpen ? (
-          <X className="h-5 w-5 text-foreground" />
-        ) : (
-          <Menu className="h-5 w-5 text-foreground" />
-        )}
-      </Button>
+    <motion.aside
+      className="hidden md:flex fixed left-0 top-0 z-40 h-screen bg-sidebar border-r border-sidebar-border/50 flex-col overflow-hidden"
+      animate={{ width: sidebarWidth }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+    >
+      {/* Logo */}
+      <div className="flex h-20 items-center px-4 shrink-0 relative">
+        <Link href="/" className="flex items-center gap-3 group min-w-0">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl gradient-primary shadow-lg shadow-primary/25 transition-transform group-hover:scale-105">
+            <Wallet className="h-4 w-4 text-white" />
+          </div>
+          <AnimatePresence initial={false}>
+            {!collapsed && (
+              <motion.div
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: "auto" }}
+                exit={{ opacity: 0, width: 0 }}
+                transition={{ duration: 0.2 }}
+                className="overflow-hidden whitespace-nowrap"
+              >
+                <p className="text-base font-bold text-foreground leading-tight">ISA Dashboard</p>
+                <p className="text-xs text-muted-foreground">Stocks & Shares</p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </Link>
+      </div>
 
-      {/* Mobile overlay */}
-      <div
-        className={cn(
-          "fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300",
-          mobileOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-        )}
-        onClick={() => setMobileOpen(false)}
-        aria-hidden="true"
-      />
-
-      {/* Sidebar */}
-      <aside
-        className={cn(
-          "fixed left-0 top-0 z-40 h-screen w-72 bg-sidebar border-r border-sidebar-border/50 transition-transform duration-300 ease-out md:translate-x-0 flex flex-col",
-          mobileOpen ? "translate-x-0" : "-translate-x-full"
-        )}
-      >
-        {/* Logo */}
-        <div className="flex h-16 md:h-20 items-center px-6 shrink-0">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl gradient-primary shadow-lg shadow-primary/25 transition-transform group-hover:scale-105">
-              <Wallet className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <span className="text-lg font-bold text-foreground">
-                ISA Dashboard
-              </span>
-              <p className="text-xs text-muted-foreground">Stocks & Shares</p>
-            </div>
-          </Link>
-        </div>
-
-        {/* Navigation */}
-        <nav className="flex-1 px-4 py-4 md:py-6 space-y-1 overflow-y-auto">
+      {/* Navigation */}
+      <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto overflow-x-hidden">
+        {!collapsed && (
           <p className="px-3 mb-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
             Menu
           </p>
-          {navItems.map((item, index) => {
-            const isActive = pathname === item.href;
-            return (
+        )}
+        {navItems.map((item, index) => {
+          const isActive = pathname === item.href;
+          return (
+            <div key={item.href} className="relative group/item">
               <Link
-                key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3 rounded-xl px-4 py-3.5 md:py-3 text-sm font-medium transition-all duration-200 btn-press touch-target animate-fade-in-up",
+                  "flex items-center rounded-xl px-3 py-3 text-sm font-medium transition-all duration-200 btn-press animate-fade-in-up",
+                  collapsed ? "justify-center" : "gap-3",
                   isActive
                     ? "bg-primary text-primary-foreground shadow-md shadow-primary/25"
                     : "text-muted-foreground hover:bg-accent hover:text-foreground"
                 )}
                 style={{ animationDelay: `${index * 50}ms` }}
               >
-                <item.icon
-                  className={cn("h-5 w-5 shrink-0", isActive && "text-primary-foreground")}
-                />
-                {item.title}
+                <item.icon className={cn("h-5 w-5 shrink-0", isActive && "text-primary-foreground")} />
+                <AnimatePresence initial={false}>
+                  {!collapsed && (
+                    <motion.span
+                      initial={{ opacity: 0, width: 0 }}
+                      animate={{ opacity: 1, width: "auto" }}
+                      exit={{ opacity: 0, width: 0 }}
+                      transition={{ duration: 0.15 }}
+                      className="overflow-hidden whitespace-nowrap"
+                    >
+                      {item.title}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
               </Link>
-            );
-          })}
-        </nav>
+              {/* Collapsed tooltip */}
+              {collapsed && (
+                <div className="pointer-events-none absolute left-full top-1/2 -translate-y-1/2 ml-2 z-50 opacity-0 group-hover/item:opacity-100 transition-opacity duration-150">
+                  <div className="bg-popover border border-border text-foreground text-xs font-medium px-2.5 py-1.5 rounded-lg shadow-lg whitespace-nowrap">
+                    {item.title}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </nav>
 
-        {/* Footer */}
-        <div className="p-4 shrink-0">
-          <div className="p-4 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/10">
-            <p className="text-sm font-medium text-foreground">Tax Year 2024/25</p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Allowance: £20,000
-            </p>
-          </div>
-        </div>
-      </aside>
-    </>
+      {/* Footer */}
+      <div className="p-3 shrink-0 space-y-2">
+        <AnimatePresence initial={false}>
+          {!collapsed && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+            >
+              <div className="p-3 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/10">
+                <p className="text-sm font-medium text-foreground">Tax Year {taxYear.id}</p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Allowance: {formatCurrency(taxYear.allowance)}
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Collapse toggle */}
+        <button
+          onClick={toggle}
+          className={cn(
+            "flex items-center rounded-xl px-3 py-2.5 text-xs font-medium text-muted-foreground hover:bg-accent hover:text-foreground transition-all duration-200 btn-press w-full",
+            collapsed ? "justify-center" : "gap-2"
+          )}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        >
+          {collapsed ? (
+            <ChevronRight className="h-4 w-4" />
+          ) : (
+            <>
+              <ChevronLeft className="h-4 w-4" />
+              <span>Collapse</span>
+            </>
+          )}
+        </button>
+      </div>
+    </motion.aside>
   );
 }
