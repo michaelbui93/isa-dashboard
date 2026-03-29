@@ -15,6 +15,22 @@ import { PercentageChange } from "@/components/shared/percentage-change";
 import { formatShares } from "@/lib/formatters";
 import type { HoldingWithDetails } from "@/types";
 
+function DrawdownBadge({ value }: { value: number }) {
+  const abs = Math.abs(value);
+  const label = value === 0 ? "Peak" : `${value.toFixed(1)}%`;
+
+  let classes = "inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-xs font-financial font-medium";
+  if (abs <= 5) {
+    classes += " bg-gain/15 text-gain";
+  } else if (abs <= 20) {
+    classes += " bg-amber-500/15 text-amber-500";
+  } else {
+    classes += " bg-loss/15 text-loss";
+  }
+
+  return <span className={classes}>{label}</span>;
+}
+
 interface HoldingsTableProps {
   holdings: HoldingWithDetails[];
 }
@@ -51,6 +67,7 @@ export function HoldingsTable({ holdings }: HoldingsTableProps) {
                 <TableHead className="text-right">Price</TableHead>
                 <TableHead className="text-right">Value</TableHead>
                 <TableHead className="text-right">Gain/Loss</TableHead>
+                <TableHead className="text-right">Drawdown</TableHead>
                 <TableHead className="text-right">Allocation</TableHead>
               </TableRow>
             </TableHeader>
@@ -102,6 +119,9 @@ export function HoldingsTable({ holdings }: HoldingsTableProps) {
                         className="block"
                       />
                     </div>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <DrawdownBadge value={holding.drawdownPercent} />
                   </TableCell>
                   <TableCell className="text-right font-financial">
                     {holding.allocation.toFixed(1)}%

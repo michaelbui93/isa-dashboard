@@ -11,6 +11,11 @@ export function calculateHoldingDetails(
   const gainLossPercent = totalCost > 0 ? (gainLoss / totalCost) * 100 : 0;
   const allocation = totalPortfolioValue > 0 ? (currentValue / totalPortfolioValue) * 100 : 0;
 
+  const drawdownPercent =
+    fund.peakPrice > 0
+      ? ((fund.currentPrice - fund.peakPrice) / fund.peakPrice) * 100
+      : 0;
+
   return {
     ...holding,
     fund,
@@ -18,6 +23,7 @@ export function calculateHoldingDetails(
     gainLoss,
     gainLossPercent,
     allocation,
+    drawdownPercent,
   };
 }
 

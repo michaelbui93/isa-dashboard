@@ -31,4 +31,5 @@ export interface HoldingWithDetails extends Holding {
   gainLoss: number;
   gainLossPercent: number;
   allocation: number;
+  drawdownPercent: number;
 }

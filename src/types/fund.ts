@@ -22,6 +22,7 @@ export interface Fund {
   currency: "GBP" | "USD" | "EUR";
   currentPrice: number;
   previousClose: number;
+  peakPrice: number;
   dayChange: number;
   yearChange: number;
   ter: number;
