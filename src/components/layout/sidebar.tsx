@@ -8,6 +8,7 @@ import {
   PiggyBank,
   Receipt,
   Search,
+  Settings,
   Wallet,
   ChevronLeft,
   ChevronRight,
@@ -26,6 +27,7 @@ const navItems = [
   { title: "ISA Allowance", href: "/allowance", icon: PiggyBank },
   { title: "Transactions", href: "/transactions", icon: Receipt },
   { title: "Funds", href: "/funds", icon: Search },
+  { title: "Settings", href: "/settings", icon: Settings },
 ];
 
 interface SidebarProps {

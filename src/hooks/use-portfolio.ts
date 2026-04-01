@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useLocalStorage } from "./use-local-storage";
 import { INITIAL_PORTFOLIO } from "@/data/mock-portfolio";
@@ -8,12 +8,30 @@ import { getFundBySymbol, FUNDS } from "@/data/funds";
 import { calculateHoldingDetails, calculatePortfolioSummary } from "@/lib/calculations";
 import { STORAGE_KEYS } from "@/lib/constants";
 import type { Portfolio, Holding, HoldingWithDetails, PortfolioSummary } from "@/types";
+import type { T212Account } from "@/lib/t212/types";
 
 export function usePortfolio() {
   const [portfolio, setPortfolio] = useLocalStorage<Portfolio>(
     STORAGE_KEYS.PORTFOLIO,
     INITIAL_PORTFOLIO
   );
+
+  // Live account data from T212 — overlays summary when available
+  const [liveAccount, setLiveAccount] = useState<T212Account | null>(null);
+  const [isLoadingLive, setIsLoadingLive] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    setIsLoadingLive(true);
+    fetch("/api/portfolio/account")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: T212Account | null) => {
+        if (!cancelled && data) setLiveAccount(data);
+      })
+      .catch(() => {/* fall back to mock */})
+      .finally(() => { if (!cancelled) setIsLoadingLive(false); });
+    return () => { cancelled = true; };
+  }, []);
 
   const holdingsWithDetails: HoldingWithDetails[] = useMemo(() => {
     const totalValue = portfolio.holdings.reduce((sum, h) => {
@@ -30,10 +48,20 @@ export function usePortfolio() {
       .filter((h): h is HoldingWithDetails => h !== null);
   }, [portfolio]);
 
-  const summary: PortfolioSummary = useMemo(
-    () => calculatePortfolioSummary(holdingsWithDetails, portfolio.cashBalance),
-    [holdingsWithDetails, portfolio.cashBalance]
-  );
+  const summary: PortfolioSummary = useMemo(() => {
+    const base = calculatePortfolioSummary(holdingsWithDetails, portfolio.cashBalance);
+    if (!liveAccount) return base;
+    // Overlay with live T212 data where available
+    return {
+      ...base,
+      totalValue: liveAccount.total,
+      cashBalance: liveAccount.cash,
+      totalGainLoss: liveAccount.result,
+      totalGainLossPercent: liveAccount.invested > 0
+        ? (liveAccount.result / liveAccount.invested) * 100
+        : base.totalGainLossPercent,
+    };
+  }, [holdingsWithDetails, portfolio.cashBalance, liveAccount]);
 
   const addHolding = useCallback(
     (fundSymbol: string, shares: number, pricePerShare: number) => {
@@ -117,6 +145,8 @@ export function usePortfolio() {
     portfolio,
     holdings: holdingsWithDetails,
     summary,
+    isLoadingLive,
+    liveAccount,
     addHolding,
     removeHolding,
     updateCashBalance,

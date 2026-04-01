@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, TrendingUp, PiggyBank, Receipt, Search } from "lucide-react";
+import { LayoutDashboard, TrendingUp, PiggyBank, Receipt, Settings } from "lucide-react";
 import { motion, LayoutGroup } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -11,7 +11,7 @@ const tabs = [
   { title: "Performance", href: "/performance", icon: TrendingUp },
   { title: "Allowance", href: "/allowance", icon: PiggyBank },
   { title: "Transactions", href: "/transactions", icon: Receipt },
-  { title: "Funds", href: "/funds", icon: Search },
+  { title: "Settings", href: "/settings", icon: Settings },
 ];
 
 export function BottomNav() {

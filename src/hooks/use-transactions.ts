@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useLocalStorage } from "./use-local-storage";
 import { INITIAL_TRANSACTIONS } from "@/data/mock-transactions";
@@ -8,10 +8,41 @@ import { STORAGE_KEYS, getCurrentTaxYear } from "@/lib/constants";
 import type { Transaction, TransactionType, TransactionFilters } from "@/types";
 
 export function useTransactions() {
-  const [transactions, setTransactions] = useLocalStorage<Transaction[]>(
+  const [localTransactions, setTransactions] = useLocalStorage<Transaction[]>(
     STORAGE_KEYS.TRANSACTIONS,
     INITIAL_TRANSACTIONS
   );
+
+  // Live transactions from T212 API
+  const [liveTransactions, setLiveTransactions] = useState<Transaction[] | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/portfolio/transactions")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((items: Record<string, unknown>[] | null) => {
+        if (cancelled || !items) return;
+        const mapped: Transaction[] = items.map((item, i) => ({
+          id: (item.fillId as string) || (item.reference as string) || `t212-${i}`,
+          type: (item._source === "dividend" ? "DIVIDEND" : "BUY") as TransactionType,
+          date: ((item.dateModified as string) || "").split("T")[0],
+          amount: (item.price as number) * (item.filledQuantity as number || item.quantity as number || 0),
+          fundSymbol: item.ticker as string | undefined,
+          shares: item.filledQuantity as number | undefined || item.quantity as number | undefined,
+          pricePerShare: item.price as number | undefined,
+          description: item._source === "dividend"
+            ? `Dividend — ${item.ticker}`
+            : `${item.type || "Order"} — ${item.ticker}`,
+          taxYear: getCurrentTaxYear().id,
+        }));
+        if (!cancelled) setLiveTransactions(mapped);
+      })
+      .catch(() => {/* fall back to local */});
+    return () => { cancelled = true; };
+  }, []);
+
+  // Use live data if available, otherwise localStorage
+  const transactions = liveTransactions ?? localTransactions;
 
   const sortedTransactions = useMemo(
     () => [...transactions].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()),
@@ -89,6 +120,7 @@ export function useTransactions() {
 
   return {
     transactions: sortedTransactions,
+    isLiveData: liveTransactions !== null,
     addTransaction,
     removeTransaction,
     filterTransactions,
