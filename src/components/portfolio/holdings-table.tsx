@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
@@ -204,9 +204,8 @@ export function HoldingsTable({ holdings }: HoldingsTableProps) {
                 const isExpanded = expandedId === holding.id;
                 const hasDrawdown = Math.abs(holding.drawdownPercent) > 20;
                 return (
-                  <>
+                  <Fragment key={holding.id}>
                     <TableRow
-                      key={holding.id}
                       className={[
                         "cursor-pointer hover:bg-muted/50 transition-colors group",
                         hasDrawdown ? "shadow-[inset_0_0_0_1px_hsl(var(--loss)/0.15)]" : "",
@@ -250,7 +249,7 @@ export function HoldingsTable({ holdings }: HoldingsTableProps) {
                         </TableCell>
                       </TableRow>
                     )}
-                  </>
+                  </Fragment>
                 );
               })}
             </TableBody>
