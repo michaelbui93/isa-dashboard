@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Wallet } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Wallet, Eye } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
@@ -9,6 +10,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,6 +32,12 @@ export default function LoginPage() {
       setSent(true);
       setLoading(false);
     }
+  };
+
+  const handlePreview = () => {
+    // Set preview mode cookie (expires in 24 hours)
+    document.cookie = "isa-preview-mode=true; path=/; max-age=86400";
+    router.push("/");
   };
 
   return (
@@ -99,6 +107,29 @@ export default function LoginPage() {
                   {loading ? "Sending…" : "Send magic link"}
                 </button>
               </form>
+
+              {/* Divider */}
+              <div className="relative my-5">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-border"></div>
+                </div>
+                <div className="relative flex justify-center text-xs">
+                  <span className="bg-card px-2 text-muted-foreground">or</span>
+                </div>
+              </div>
+
+              {/* Preview Button */}
+              <button
+                type="button"
+                onClick={handlePreview}
+                className="w-full flex items-center justify-center gap-2 bg-muted hover:bg-muted/80 text-foreground rounded-xl py-2.5 text-sm font-medium transition-all active:scale-[0.98]"
+              >
+                <Eye className="h-4 w-4" />
+                Preview with example data
+              </button>
+              <p className="text-xs text-muted-foreground text-center mt-2">
+                Explore the dashboard with demo portfolio data
+              </p>
             </>
           )}
         </div>
